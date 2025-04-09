@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-# test_dry_run.py
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import time
 import numpy as np
 import math
 import signal
 import csv
-import os
 from datetime import datetime
 from const import parameter
 from robot import Robot
