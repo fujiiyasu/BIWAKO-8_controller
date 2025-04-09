@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# プロジェクトルート（const.py がある場所）に移動
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+os.chdir(project_root) 
+
+# モジュール検索パスに project を追加
+sys.path.append(project_root)
 
 import time
 import numpy as np
