@@ -18,6 +18,33 @@ from actuator_interface import ActuatorInterface
 from controller import Controller
 import calculate_degree as calculator
 
+# --- 方向を文字列に変換する関数 ---
+def direction_to_text(direction, mode):
+    # モード0: keep (4方向移動)
+    if mode == 0:
+        direction_map = {
+            0: "停止",
+            1: "前進",
+            2: "後退",
+            3: "右",
+            4: "左"
+        }
+    # モード1: straight (8方向移動)
+    elif mode == 1:
+        direction_map = {
+            0: "停止",
+            1: "前進",
+            2: "後退",
+            3: "前右斜め",
+            4: "後右斜め",
+            5: "後左斜め",
+            6: "前左斜め"
+        }
+    else:
+        return "不明"
+    
+    return direction_map.get(direction, f"未定義方向:{direction}")
+
 # --- テストモードの設定 ---
 # 実際にスラスタを動作させないフラグ
 DRY_RUN = True
@@ -168,6 +195,11 @@ try:
             direction, pwm = controller.decide_command(diff_distance, diff_heading, mode)
             robot.cmd = direction
             robot.pwm = pwm
+            
+            # 方向テキストを取得して表示
+            direction_text = direction_to_text(direction, mode)
+            print(f"[COMMAND] 方向: {direction} ({direction_text}), PWM: {pwm}")
+            
             actuator.control_thruster(direction, pwm)
 
             time.sleep(0.03)  # 陸上テスト用に待機時間を長く設定
