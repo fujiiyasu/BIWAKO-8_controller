@@ -133,7 +133,12 @@ def display_navigation_guide(current_lat, current_lon, target_lat, target_lon, y
 # --- 安全にセンサーデータを取得する関数 ---
 def safe_get_sensor_data(sensor, default_lat=35.0, default_lon=135.0, default_yaw=0.0):
     try:
-        lat, lon, yaw = sensor.get_sensor_data()
+        # 安全なメソッドを使用 (修正版SensorInterfaceが実装している場合)
+        if hasattr(sensor, 'get_sensor_data_safe'):
+            lat, lon, yaw = sensor.get_sensor_data_safe()
+        else:
+            # 互換性のためのフォールバック
+            lat, lon, yaw = sensor.get_sensor_data()
         return lat, lon, yaw
     except Exception as e:
         print(f"[WARN] センサーデータ取得中にエラー: {e}")
@@ -232,6 +237,11 @@ def logging(signum=None, frame=None):
             ]
             log_data.append(data)
             print(f"[LOG] 記録: 距離={robot.diff_distance:.2f}m, 角度差={robot.diff_heading:.2f}度, 電圧={robot.voltage:.2f}V")
+            
+            # 10回ごとに詳細なセンサー情報を表示（デバッグ用）
+            if robot.count % 10 == 0:
+                print(f"[DEBUG] センサー生値: lat={robot.lat:.6f}, lon={robot.lon:.6f}, yaw={math.degrees(robot.yaw):.2f}°")
+                
         except Exception as e:
             print(f"[ERROR] ログデータ作成中にエラー: {e}")
             print(traceback.format_exc())
@@ -265,28 +275,48 @@ def main():
         print("[INFO] センサーインターフェース初期化...")
         try:
             sensor = SensorInterface()
+            # デバッグフラグをオフに設定（必要に応じてオンに）
+            if hasattr(sensor, 'debug'):
+                sensor.debug = False
         except Exception as e:
             print(f"[ERROR] センサーインターフェース初期化失敗: {e}")
             print("[WARN] モックセンサーを使用します")
             # モックセンサーを作成
             class MockSensorInterface:
                 def __init__(self):
-                    self.lat = 35.0
-                    self.lon = 135.0
-                    self.yaw = 0.0
+                    self.prev_lat = 35.0
+                    self.prev_lon = 135.0
+                    self.prev_yaw = 0.0
+                    self.debug = False
                     print("[INFO] モックセンサーを初期化しました")
                 
                 def get_sensor_data(self):
-                    return self.lat, self.lon, self.yaw
+                    # 少しずつ移動・回転するシミュレーション
+                    self.prev_lat += 0.00001
+                    self.prev_lon += 0.00001
+                    self.prev_yaw = (self.prev_yaw + 0.01) % (2 * 3.14159)
+                    return self.prev_lat, self.prev_lon, self.prev_yaw
                 
+                def get_sensor_data_safe(self):
+                    return self.get_sensor_data()
+                    
                 def wait_heartbeat(self):
                     pass
                 
                 def update_attitude(self):
-                    return 0.0
+                    self.prev_yaw = (self.prev_yaw + 0.01) % (2 * 3.14159)
+                    return self.prev_yaw
                 
+                def update_attitude_safe(self):
+                    return self.update_attitude()
+                    
                 def update_gps(self):
-                    return 35.0, 135.0
+                    self.prev_lat += 0.00001
+                    self.prev_lon += 0.00001
+                    return self.prev_lat, self.prev_lon
+                    
+                def update_gps_safe(self):
+                    return self.update_gps()
             
             sensor = MockSensorInterface()
 
@@ -404,7 +434,7 @@ def main():
                     print("[WARN] 前回の位置・姿勢を使用して処理を継続します")
                     # 前回の値を使用して継続
 
-                                    # 2. 差分計算
+                # 2. 差分計算
                 try:
                     current = np.array([robot.lat, robot.lon])
                     goal = robot.get_current_waypoint()
@@ -474,7 +504,8 @@ def main():
                     robot.cmd = 0
                     robot.pwm = 0
 
-                time.sleep(0.1)  # 陸上テスト用に待機時間を設定
+                # メインループの待機時間を0.2秒に増やして安定化
+                time.sleep(0.2)
             
             except Exception as e:
                 print(f"[ERROR] メインループでエラーが発生: {e}")
