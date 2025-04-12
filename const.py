@@ -16,7 +16,7 @@ class parameter:
 		self.wt_log_mode = False
 
 		# CONTROL MODE
-		self.control_mode = 3
+		self.control_mode = 0
 		# 0:FBLR MODE, 1:DIAGNALCONTROL MODE
 		# 2:FIXED HEAD CONTROL MODE, 3:OCT-DIRECTIONAL MODE
 		# self.thruster_control = 0

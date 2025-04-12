@@ -22,6 +22,7 @@ def huveny_distance(target_point, current_point):
     return d / 1000  # [km]
 
 # === Haversine式による方位角計算 ===
+"""
 def calculate_bearing(target_point, current_point):
     lat1 = math.radians(target_point[0])
     lat2 = math.radians(current_point[0])
@@ -33,8 +34,35 @@ def calculate_bearing(target_point, current_point):
     bearing = math.degrees(math.atan2(y, x))
     bearing = (bearing + 360) % 360
     return bearing
+"""
+def calculate_bearing(target_point, current_point):
+    # target_pointは[lat, lon]、current_pointも[lat, lon]
+    lat1 = math.radians(current_point[0])  # 現在の緯度
+    lat2 = math.radians(target_point[0])   # 目標の緯度
+    lon1 = math.radians(current_point[1])  # 現在の経度
+    lon2 = math.radians(target_point[1])   # 目標の経度
+    
+    dlon = lon2 - lon1
+    
+    y = math.sin(dlon) * math.cos(lat2)
+    x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(dlon)
+    
+    bearing = math.atan2(y, x)
+    bearing_deg = math.degrees(bearing)
+    bearing_deg = (bearing_deg + 360) % 360  # 0-360の範囲に正規化
+    
+    return bearing
 
 # === -π ～ π に角度を制限 ===
+"""
+def limit_angle(angle_in):
+    angle_out = angle_in
+    while angle_out > math.pi:
+        angle_out -= 2 * math.pi
+    while angle_out < -math.pi:
+        angle_out += 2 * math.pi
+    return angle_out
+"""
 def limit_angle(angle_in):
     angle_out = angle_in
     while angle_out > math.pi:
