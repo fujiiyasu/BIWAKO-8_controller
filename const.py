@@ -8,7 +8,7 @@ class parameter:
 		self.degree_Kd = 0.9
 
 		# WAY POINT
-		self.way_point_file = './way_point/creation_core.csv'
+		self.way_point_file = './way_point/iwakura_park.csv'
 
 		# MODE
 		self.data_log_mode = True
