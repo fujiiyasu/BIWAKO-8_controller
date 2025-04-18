@@ -51,35 +51,50 @@ def direction_to_text(direction, mode):
     return direction_map.get(direction, f"未定義方向:{direction}")
 
 # --- 方位角から進行方向を視覚的に表示する関数 ---
-def heading_to_direction_indicator(diff_heading):
+def heading_to_direction_indicator(diff_heading, mode=1):
     """
-    方位角の差から進行方向を↑↓←→などの矢印で表示する
+    方位角の差から進行方向を矢印で表示する
     
     Args:
         diff_heading: 目標方位と現在方位の差（度）-180〜180の範囲
+        mode: 移動モード (0: キープモード(4方向), 1: ストレートモード(8方向))
     
     Returns:
         方向を示す矢印の文字列
     """
-    # 角度を45度区切りの8方向にマッピング
-    if -22.5 <= diff_heading < 22.5:
-        return "↑ (前)"
-    elif 22.5 <= diff_heading < 67.5:
-        return "↗ (右前)"
-    elif 67.5 <= diff_heading < 112.5:
-        return "→ (右)"
-    elif 112.5 <= diff_heading < 157.5:
-        return "↘ (右後)"
-    elif diff_heading >= 157.5 or diff_heading < -157.5:
-        return "↓ (後)"
-    elif -157.5 <= diff_heading < -112.5:
-        return "↙ (左後)"
-    elif -112.5 <= diff_heading < -67.5:
-        return "← (左)"
-    elif -67.5 <= diff_heading < -22.5:
-        return "↖ (左前)"
+    # キープモード: 4方向表示
+    if mode == 0:
+        if -45.0 <= diff_heading < 45.0:
+            return "↑ (前)"
+        elif 45.0 <= diff_heading < 135.0:
+            return "→ (右)"
+        elif -135.0 <= diff_heading < -45.0:
+            return "← (左)"
+        elif diff_heading >= 135.0 or diff_heading < -135.0:
+            return "↓ (後)"
+        else:
+            return "? (不明)"
+    
+    # ストレートモード: 8方向表示
     else:
-        return "? (不明)"
+        if -22.5 <= diff_heading < 22.5:
+            return "↑ (前)"
+        elif 22.5 <= diff_heading < 67.5:
+            return "↗ (右前)"
+        elif 67.5 <= diff_heading < 112.5:
+            return "→ (右)"
+        elif 112.5 <= diff_heading < 157.5:
+            return "↘ (右後)"
+        elif diff_heading >= 157.5 or diff_heading < -157.5:
+            return "↓ (後)"
+        elif -157.5 <= diff_heading < -112.5:
+            return "↙ (左後)"
+        elif -112.5 <= diff_heading < -67.5:
+            return "← (左)"
+        elif -67.5 <= diff_heading < -22.5:
+            return "↖ (左前)"
+        else:
+            return "? (不明)"
 
 # --- 現在位置と次のウェイポイントの関係を表示する関数 ---
 def display_navigation_guide(current_lat, current_lon, target_lat, target_lon, yaw, diff_heading, diff_distance):
