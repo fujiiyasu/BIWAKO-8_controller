@@ -23,7 +23,7 @@ sys.path.append(parent_dir)
 from actuator_interface import ActuatorInterface
 
 # 定数
-DEFAULT_CONFIG_FILE = "servo_pwm_config.csv"  # デフォルトの設定ファイルパス
+DEFAULT_CONFIG_FILE = "../servo_pwm_config.csv"  # デフォルトの設定ファイルパス
 
 def keyboard_control(actuator):
     """インタラクティブなキーボード制御ループ"""
