@@ -84,7 +84,7 @@ def main():
     
     try:
         # アクチュエータインターフェースの初期化
-        actuator = ActuatorInterface(pwm_config_file=args.config)
+        actuator = ActuatorInterface()
         
         # キーボード制御ループを開始
         keyboard_control(actuator)
