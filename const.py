@@ -8,7 +8,7 @@ class parameter:
 		self.degree_Kd = 0.9
 
 		# WAY POINT
-		self.way_point_file = './way_point/iwakura_park.csv'
+		self.way_point_file = './way_point/shinike.csv'
 
 		# MODE
 		self.data_log_mode = True
@@ -31,6 +31,6 @@ class parameter:
 		self.main_target_distance_tolerance = 3.0
 		self.temp_target_distance_tolerance = 5.0
 		self.heading_torelance = 5.0
-		self.way_point_tolerance = 1.0
+		self.way_point_tolerance = 2.0
 		self.duration = 10.0
 		self.timer = 0.10
