@@ -392,6 +392,7 @@ if __name__ == "__main__":
         print("[INFO] 終了処理を実行中...")
         try:
             actuator.stop_thruster()
+            actuator.i2cbus.write_i2c_block_data(actuator.arduino, 0, [0, 0])
         except Exception as e:
             print(f"[ERROR] スラスタ停止中にエラー: {e}")
             
