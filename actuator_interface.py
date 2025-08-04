@@ -12,7 +12,7 @@ class ActuatorInterface:
         self.i2cbus = SMBus(6)
 
         # PWM制御設定
-        self.link_pwm = Adafruit_PCA9685.PCA9685(link_pwm_addr)
+        self.link_pwm = Adafruit_PCA9685.PCA9685(link_pwm_addr, busnum=6)
         self.link_pwm.set_pwm_freq(60)
 
         # PWM設定ファイルから読み込み
