@@ -5,7 +5,7 @@ import smbus
 
 class INA226:
     def __init__(self, addr):
-        self.i2c = smbus.SMBus(1)
+        self.i2c = smbus.SMBus(6)
 
         self.VOLTAGE_REGISTER = 0x02
         self.CURRENT_REGISTER = 0x04

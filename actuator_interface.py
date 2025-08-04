@@ -9,7 +9,7 @@ class ActuatorInterface:
     def __init__(self, arduino_addr=0x10, link_pwm_addr=0x41, pwm_config_file="servo_pwm_config.csv"):
         # I2C通信設定
         self.arduino = arduino_addr
-        self.i2cbus = SMBus(1)
+        self.i2cbus = SMBus(6)
 
         # PWM制御設定
         self.link_pwm = Adafruit_PCA9685.PCA9685(link_pwm_addr)
