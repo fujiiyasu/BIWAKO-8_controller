@@ -6,7 +6,7 @@ import Adafruit_PCA9685
 from smbus import SMBus
 
 class ActuatorInterface:
-    def __init__(self, arduino_addr=0x04, link_pwm_addr=0x41, pwm_config_file="servo_pwm_config.csv"):
+    def __init__(self, arduino_addr=0x10, link_pwm_addr=0x41, pwm_config_file="servo_pwm_config.csv"):
         # I2C通信設定
         self.arduino = arduino_addr
         self.i2cbus = SMBus(1)

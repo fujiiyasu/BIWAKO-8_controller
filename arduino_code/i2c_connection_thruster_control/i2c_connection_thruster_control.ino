@@ -35,7 +35,7 @@ void set_thrusters(int d1, int d2, int d3, int d4) {
 }
 
 void setup() {
-  int SLAVE_ADDRESS = 0x04;
+  int SLAVE_ADDRESS = 0x10;
   Serial.begin(9600);
   Wire.begin(SLAVE_ADDRESS);
   Wire.onReceive(ReceiveMessage);
