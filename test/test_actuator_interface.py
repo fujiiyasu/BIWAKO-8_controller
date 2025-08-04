@@ -7,7 +7,10 @@ from actuator_interface import ActuatorInterface
 import time
 
 def test_actuator():
-    actuator = ActuatorInterface(pwm_config_file="servo_pwm_config.csv")
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    config_path = os.path.join(base_dir, "servo_pwm_config.csv")
+
+    actuator = ActuatorInterface(pwm_config_file=config_path)
 
     print("🌀 開く")
     actuator.set_open_mode()
